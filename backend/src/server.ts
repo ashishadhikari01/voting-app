@@ -1,13 +1,14 @@
 import express,{Request,Response} from "express"
 import cors from 'cors'
 import mongoose from "mongoose"
-import { registeruserRouter } from "./routes/RegisterUserRoute.js"
+import {User} from "./routes/User.js"
+
 const app=express()
 const PORT=8000
 
 app.use(express.json())
 app.use(cors())
-app.use('/',registeruserRouter)
+app.use('/user',User)
 
 mongoose.connect('mongodb://localhost/votingpoll')
 .then(()=>console.log('database connected'))

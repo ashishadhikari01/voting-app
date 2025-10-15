@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import axios from "axios"
 
 
@@ -21,6 +21,9 @@ export default function Register() {
     confirmPassword: "",
   })
   const [errorFeedback,setErrorFeedback]=useState("")
+  const [registerFeedback,setRegisterFeedback]=useState("")
+  const toLogin=useNavigate()
+
   function handleUserDetail(event:React.ChangeEvent<HTMLInputElement>) {
     const {name,value} = event.target;
     setUserDetail((prev)=>{
@@ -34,23 +37,23 @@ export default function Register() {
   function validateUser(userDetail:UserDetailType){
     const stringRegex=/^[A-Za-z\s]+$/
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-   for(let key in userDetail){
+   for(let key in userDetail){ 
     const typedKey= key as keyof UserDetailType
     if(userDetail[typedKey].trim()===""){
       setErrorFeedback(`${key} is empty`)
-      return false
+      return false 
     }
    }
   if(!stringRegex.test(userDetail.firstname)){
-     setErrorFeedback("firstname should not contain number")
+     setErrorFeedback("firstname should only letter")
      return false
   }
   else if(!stringRegex.test(userDetail.lastname)){
-    setErrorFeedback("lastname should not contain number")
+    setErrorFeedback("lastname should only letter")
     return false
   }
   else if (!emailRegex.test(userDetail.email.trim())) {
-  setErrorFeedback("Invalid email format");
+  setErrorFeedback("Invalid email format")
   return false;
 }
   else if(userDetail.password.length<6){
@@ -67,33 +70,38 @@ export default function Register() {
   }
   }
 
-  async function registerUser(e:React.ChangeEvent<HTMLFormElement>){
+  async function registerUser(e:React.FormEvent<HTMLFormElement>){
     e.preventDefault()
    let isValidate=validateUser(userDetail)
    if(!isValidate) return
-   try {
-    const res = await axios.post('http://localhost:8000/registeruser', {
-      firstname: userDetail.firstname,
-      lastname: userDetail.lastname,
-      email: userDetail.email,
-      gender: userDetail.gender,
-      password: userDetail.password
-    });
-    console.log(res.data);
-    setUserDetail({
-  firstname: "",
-  lastname: "",
-  email: "",
-  gender: "",
-  password: "",
-  confirmPassword: "",
-});
-    // handle success (e.g. redirect or show message)
-  } catch (err: any) {
-    console.error('Registration error:', err.response || err.message);
-    setErrorFeedback('Registration failed. ' + (err.response?.data?.message || ''));
+   axios.post('http://localhost:8000/user/register',{
+    firstname:userDetail.firstname,
+    lastname:userDetail.lastname,
+    email:userDetail.email,
+    gender:userDetail.gender,
+    password:userDetail.confirmPassword
+   })
+   .then((res)=>{
+    setRegisterFeedback(res.data.message)
+    setUserDetail({firstname:"",lastname:"",email:"",gender:"",password:"",confirmPassword:""})
+    setTimeout(()=>{
+     navigateToLogin()
+    },2000)
+   })
+   .catch((err)=>{
+    setErrorFeedback('Error on registering user')
+    // console.log('error on register user', err.message())
+   })
   }
+
+  setTimeout(()=>{
+  setRegisterFeedback("")
+  },1500)
+
+  function navigateToLogin():void{
+    toLogin('/login')
   }
+  
   console.log(userDetail)
   return (
     <>
@@ -193,6 +201,7 @@ export default function Register() {
               </Link>
             </div>
             <p className="text-lg text-red-500 italic">{errorFeedback}</p>
+            <p className="text-lg text-green-500 italic">{registerFeedback}</p>
             <button 
             className="border-2 w-40 p-2 bg-blue-600 rounded-xl cursor-pointer font-semibold mt-4 mb-10 hover:bg-blue-700 transition duration-300"
             type="submit"

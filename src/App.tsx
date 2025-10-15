@@ -6,7 +6,12 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import Login from './pages/Login'
 import Register from './pages/Register'
+// import System from "./pages/Sytem"
 import LandingLayout from "../components/LandingLayout"
+import SystemLayout from "../components/SystemLayout"
+import SystemHome from "./pages/SystemHome"
+import SystemPoll from './pages/SystemPoll'
+import SystemAbout from './pages/SystemAbout'
 
 function App() {
    
@@ -16,11 +21,18 @@ function App() {
       <Routes>
         <Route element={<LandingLayout/>}>
         <Route path="/" element={<LandingPage/>}/>
-        <Route path='/about' element={<About/>}/>
-        <Route path='/contact' element={<Contact/>}/>
-        <Route path='/login' element={<Login/>}/>
-        <Route path='/register' element={<Register/>}/>
+        <Route path='about' element={<About/>}/>
+        <Route path='contact' element={<Contact/>}/>
+        <Route path='login' element={<Login/>}/>
+        <Route path='register' element={<Register/>}/>
         </Route>
+
+        <Route path='/poll.com' element={<SystemLayout/>}>
+        <Route path='home' element={<SystemHome/>}/>
+        <Route path='poll' element={<SystemPoll/>}/>
+        <Route path='about' element={<SystemAbout/>}/>
+        </Route>
+        
       </Routes>
 
       </BrowserRouter>

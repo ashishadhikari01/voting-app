@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { registeruser as RegisterUserModel } from "../model/RegisterUserModel.js";
 import bcrypt from "bcrypt";
 
-export const registeruser = async (req: Request, res: Response) => {
+export const RegisterController = async (req: Request, res: Response) => {
   try {
     const { firstname, lastname, email, gender, password } = req.body;
     const saltRounds = 10;
@@ -15,11 +15,10 @@ export const registeruser = async (req: Request, res: Response) => {
       password: hashedPassword,
     });
     await newUser.save();
-    console.log('user registered')
-    res.status(200).json({message:'user registered successfully'})
-
+    console.log("user registered successfully");
+    res.status(200).json({ message: "user registered successfully" });
   } catch (err) {
-    console.log('user not registeredd')
-    res.status(500).json({ message: "Registration failed", error: err });
+    res.status(500).json({ message: "Registration Failed" });
+    console.log("Error on user registration", err);
   }
 };

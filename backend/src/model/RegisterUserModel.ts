@@ -9,5 +9,3 @@ const userSchema=new mongoose.Schema({
 })
 
 export const registeruser=mongoose.model('registeruser',userSchema)
-
-// exports.registeruser=registeruser
