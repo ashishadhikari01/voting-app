@@ -15,8 +15,13 @@ export const LoginController= async (req:Request,res:Response)=>{
     if(!findUser){
      return res.status(404).json({message:"user not registered yet"})
     } 
-    const isPasswordMatch=await bcrypt.compare(password,findUser.password)
-    if(isPasswordMatch){
+
+    // if(findUser.isActive){
+    if(!findUser.isActive){ 
+        return res.json({message:'You account is currently under deactivation'})
+    }
+     const isPasswordMatch=await bcrypt.compare(password,findUser.password)
+    if(isPasswordMatch){ 
         const token=jwt.sign(
             {id:findUser._id,email:findUser.email},
              secretkey,

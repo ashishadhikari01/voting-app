@@ -1,13 +1,19 @@
 import express,{Request,Response} from "express"
 import cors from 'cors'
 import mongoose from "mongoose"
+import cookieparser from 'cookie-parser'
 import {User} from "./routes/User.js"
 
 const app=express()
 const PORT=8000
 
+
 app.use(express.json())
-app.use(cors())
+app.use(cookieparser())
+app.use(cors({
+    origin:'http://localhost:5173',
+    credentials:true
+}))
 app.use('/user',User)
 
 mongoose.connect('mongodb://localhost/votingpoll')

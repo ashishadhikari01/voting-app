@@ -9,10 +9,11 @@ export const RegisterController = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newUser = new RegisterUserModel({
       firstname,
-      lastname,
+      lastname, 
       email,
       gender,
       password: hashedPassword,
+      isActive:true
     });
     await newUser.save();
     console.log("user registered successfully");
